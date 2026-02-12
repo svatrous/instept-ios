@@ -1,24 +1,80 @@
-//
-//  ContentView.swift
-//  Instept
-//
-//  Created by Pavel Ilin on 12.02.26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    @StateObject private var viewModel = RecipeViewModel()
+    @State private var urlInput: String = ""
+    @State private var isShowingRecipe = false
 
-#Preview {
-    ContentView()
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                Text("Instept")
+                    .font(.largeTitle)
+                    .fontWeight(.heavy)
+                    .foregroundColor(.purple)
+                
+                Text("Paste an Instagram Reel URL to get the recipe")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                
+                TextField("https://instagram.com/reel/...", text: $urlInput)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
+                
+                Button(action: {
+                    viewModel.analyzeMetadata(url: urlInput)
+                }) {
+                    HStack {
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        } else {
+                            Text("Analyze Recipe")
+                                .fontWeight(.bold)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(LinearGradient(gradient: Gradient(colors: [.purple, .blue]), startPoint: .leading, endPoint: .trailing))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                }
+                .disabled(viewModel.isLoading || urlInput.isEmpty)
+                .padding(.horizontal)
+                
+                if let error = viewModel.errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding()
+                }
+                
+                Spacer()
+                
+                
+                NavigationLink(
+                    destination: Group {
+                        if let recipe = viewModel.recipe {
+                            RecipeView(recipe: recipe)
+                        } else {
+                            EmptyView()
+                        }
+                    },
+                    isActive: $isShowingRecipe,
+                    label: { EmptyView() }
+                )
+            }
+            .padding()
+            .navigationBarHidden(true)
+            .onChange(of: viewModel.recipe != nil) { hasRecipe in
+                if hasRecipe {
+                    isShowingRecipe = true
+                }
+            }
+
+        }
+    }
 }
