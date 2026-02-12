@@ -2,7 +2,7 @@ import Foundation
 
 class NetworkManager {
     static let shared = NetworkManager()
-    private let baseURL = "http://localhost:8000"
+    private let baseURL = "https://web-production-11711.up.railway.app"
     
     func analyzeVideo(url: String) async throws -> Recipe {
         guard let endpoint = URL(string: "\(baseURL)/analyze") else {
