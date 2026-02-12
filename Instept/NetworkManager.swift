@@ -11,9 +11,11 @@ class NetworkManager {
         
         var request = URLRequest(url: endpoint)
         request.httpMethod = "POST"
+        request.timeoutInterval = 600 // 5 minutes timeout for image generation
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let body = AnalyzeRequest(url: url)
+        let language = Locale.current.language.languageCode?.identifier ?? "en"
+        let body = AnalyzeRequest(url: url, language: language)
         request.httpBody = try JSONEncoder().encode(body)
         
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -26,3 +28,4 @@ class NetworkManager {
         return recipe
     }
 }
+

@@ -58,7 +58,7 @@ struct ContentView: View {
                 NavigationLink(
                     destination: Group {
                         if let recipe = viewModel.recipe {
-                            RecipeView(recipe: recipe)
+                            RecipeOverviewView(recipe: recipe)
                         } else {
                             EmptyView()
                         }
