@@ -11,6 +11,7 @@ struct ImportRecipeSheet: View {
     @Environment(\.dismiss) var dismiss
     @State private var recipeURL: String = ""
     @State private var isImporting: Bool = false
+    @State private var showProcessingView: Bool = false
     @State private var showError: Bool = false
     @State private var errorMessage: String = ""
     
@@ -162,6 +163,12 @@ struct ImportRecipeSheet: View {
         } message: {
             Text(errorMessage)
         }
+        .fullScreenCover(isPresented: $showProcessingView) {
+            ProcessingView(onGotIt: {
+                showProcessingView = false
+                dismiss() // Close the sheet entirely
+            })
+        }
     }
     
     private func pasteFromClipboard() {
@@ -184,7 +191,14 @@ struct ImportRecipeSheet: View {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let body: [String: String] = ["url": recipeURL]
+        let fcmToken = UserDefaults.standard.string(forKey: "fcmToken")
+        print("Sending import request with FCM Token: \(fcmToken ?? "None")")
+        
+        var body: [String: String] = ["url": recipeURL]
+        if let token = fcmToken {
+            body["fcm_token"] = token
+        }
+        
         request.httpBody = try? JSONEncoder().encode(body)
         
         URLSession.shared.dataTask(with: request) { data, response, error in
@@ -206,20 +220,30 @@ struct ImportRecipeSheet: View {
                     print("Received JSON: \(jsonString)")
                 }
                 
+                // Attempt to decode ProcessingResponse first (NEW FLOW)
+                struct ProcessingResponse: Decodable {
+                    let status: String
+                    let message: String
+                }
+                
                 do {
                     let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .iso8601
-                    let recipe = try decoder.decode(Recipe.self, from: data)
+                    let processingResponse = try decoder.decode(ProcessingResponse.self, from: data)
                     
-                    // Call completion handler to notify parent
-                    onImport(recipe)
-                    
-                    // Dismiss the sheet
-                    dismiss()
+                    if processingResponse.status == "processing" {
+                        // Show the processing view
+                        showProcessingView = true
+                    } else {
+                        // Fallback or legacy handling?
+                        showError(message: "Unexpected status: \(processingResponse.status)")
+                    }
                     
                 } catch {
+                    // Fallback to Recipe decoding check (just in case backend rolled back or something)
+                    // But actually we changed backend, so this will fail.
+                    // Just report error.
                     print("Decoding error: \(error)")
-                    showError(message: "Failed to parse recipe: \(error.localizedDescription)")
+                    showError(message: "Failed to parse response: \(error.localizedDescription)")
                 }
             }
         }.resume()
