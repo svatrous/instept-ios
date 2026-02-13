@@ -6,6 +6,10 @@ struct FinishCookingView: View {
     
     @State private var rating: Int = 0
     @State private var animate = false
+    @State private var hasRated = false
+    @State private var isSubmitting = false
+    
+    private let backendUrl = "https://web-production-11711.up.railway.app"
     
     var body: some View {
         GeometryReader { geo in
@@ -99,8 +103,11 @@ struct FinishCookingView: View {
                             HStack(spacing: 8) {
                                 ForEach(1...5, id: \.self) { index in
                                     Button(action: {
-                                        withAnimation(.spring()) {
-                                            rating = index
+                                        if !hasRated && !isSubmitting {
+                                            withAnimation(.spring()) {
+                                                rating = index
+                                            }
+                                            submitRating(index)
                                         }
                                     }) {
                                         Image(systemName: "star.fill")
@@ -113,6 +120,18 @@ struct FinishCookingView: View {
                             }
                         }
                         .padding(.top, 8)
+                        
+                        if hasRated {
+                            Text("Thanks for your feedback!")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundColor(Color.green.opacity(0.9))
+                                .transition(.opacity.combined(with: .scale))
+                        } else if isSubmitting {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(0.8)
+                        }
                     }
                     .padding(.horizontal, 32)
                     
@@ -120,33 +139,18 @@ struct FinishCookingView: View {
                     
                     // Buttons
                     VStack(spacing: 12) {
-                        Button(action: {
-                            // Share action
-                        }) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "square.and.arrow.up")
-                                    .font(.system(size: 18))
-                                Text("Share your creation")
-                                    .fontWeight(.bold)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(Color("primary"))
-                            .foregroundColor(.white)
-                            .cornerRadius(14)
-                            .shadow(color: Color("primary").opacity(0.4), radius: 20, x: 0, y: 4)
-                        }
-                        
                         Button(action: onDismiss) {
                             Text("Back to Home")
-                                .fontWeight(.semibold)
+                                .fontWeight(.bold)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
-                                .background(Color.white.opacity(0.1))
+                                .background(Color("primary"))
                                 .foregroundColor(.white)
                                 .cornerRadius(14)
-                                .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.1), lineWidth: 1))
+                                .shadow(color: Color("primary").opacity(0.4), radius: 20, x: 0, y: 4)
                         }
+                        
+
                     }
                     .padding(.horizontal, 32)
                     .padding(.bottom, 40)
@@ -205,6 +209,30 @@ struct FinishCookingView: View {
                 animate = true
             }
         }
+    }
+
+    
+    private func submitRating(_ rating: Int) {
+        guard let recipeId = recipe.id, !recipeId.isEmpty else { return }
+        
+        isSubmitting = true
+        
+        guard let url = URL(string: "\(backendUrl)/rate") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = ["recipe_id": recipeId, "rating": rating]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        URLSession.shared.dataTask(with: request) { _, _, _ in
+            DispatchQueue.main.async {
+                isSubmitting = false
+                withAnimation {
+                    hasRated = true
+                }
+            }
+        }.resume()
     }
 }
 

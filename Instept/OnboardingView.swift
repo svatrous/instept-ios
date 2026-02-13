@@ -13,6 +13,7 @@ struct OnboardingPage {
         case videoStruggle
         case reelsToRecipes
         case saveFavorites
+        case pushNotification
     }
 }
 
@@ -21,7 +22,11 @@ struct OnboardingPage {
 struct OnboardingView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @StateObject private var authManager = AuthenticationManager()
+
+    
     @State private var currentPage = 0
+    // Removed showPushScreen state
+
     
     private let pages: [OnboardingPage] = [
         OnboardingPage(
@@ -41,6 +46,12 @@ struct OnboardingView: View {
             highlightedWord: "Favorites",
             subtitle: "Create an account to keep all your imported recipes organized and accessible on any device.",
             illustrationType: .saveFavorites
+        ),
+        OnboardingPage(
+            title: "Stay Notified",
+            highlightedWord: "Notified",
+            subtitle: "We'll let you know as soon as your Reel has been successfully transformed into a recipe, so you can start cooking right away.",
+            illustrationType: .pushNotification
         )
     ]
     
@@ -92,8 +103,55 @@ struct OnboardingView: View {
                 .animation(.easeInOut(duration: 0.3), value: currentPage)
                 .padding(.bottom, 24)
                 
-                // Bottom button
-                if currentPage < pages.count - 1 {
+                // Bottom button area
+                if currentPage == pages.count - 2 { // Page 3 (Index 2): Sign In
+                    SignInWithAppleButton(
+                        onRequest: authManager.prepareRequest,
+                        onCompletion: { result in
+                            switch result {
+                            case .success(let authorization):
+                                authManager.handleAuthorization(authorization) {
+                                    withAnimation {
+                                        currentPage += 1 // Move to Push Screen
+                                    }
+                                }
+                            case .failure(let error):
+                                authManager.handleError(error)
+                            }
+                        }
+                    )
+                    .signInWithAppleButtonStyle(.white)
+                    .frame(height: 56)
+                    .cornerRadius(16)
+                    .shadow(color: Color.white.opacity(0.1), radius: 12, x: 0, y: 6)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 40)
+                    
+                } else if currentPage == pages.count - 1 { // Page 4 (Index 3): Push Permissions
+                    VStack(spacing: 16) {
+                        Button(action: requestPermissions) {
+                            Text("Enable Notifications")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 18)
+                                .background(Color(red: 0.92, green: 0.60, blue: 0.28))
+                                .cornerRadius(16)
+                                .shadow(color: Color.orange.opacity(0.2), radius: 12, x: 0, y: 6)
+                        }
+                        
+                        Button(action: completeOnboarding) {
+                            Text("Maybe Later")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 40)
+                    
+                } else { // Page 1 & 2: Next
                     Button(action: {
                         withAnimation(.easeInOut(duration: 0.3)) {
                             currentPage += 1
@@ -115,26 +173,6 @@ struct OnboardingView: View {
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 40)
-                } else {
-                    SignInWithAppleButton(
-                        onRequest: authManager.prepareRequest,
-                        onCompletion: { result in
-                            switch result {
-                            case .success(let authorization):
-                                authManager.handleAuthorization(authorization) {
-                                    completeOnboarding()
-                                }
-                            case .failure(let error):
-                                authManager.handleError(error)
-                            }
-                        }
-                    )
-                    .signInWithAppleButtonStyle(.white)
-                    .frame(height: 56)
-                    .cornerRadius(16)
-                    .shadow(color: Color.white.opacity(0.1), radius: 12, x: 0, y: 6)
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 40)
                 }
             }
         }
@@ -142,6 +180,18 @@ struct OnboardingView: View {
     
     private func completeOnboarding() {
         hasCompletedOnboarding = true
+    }
+    
+    private func requestPermissions() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+            if success {
+                print("Notifications enabled")
+            }
+            
+            DispatchQueue.main.async {
+                completeOnboarding()
+            }
+        }
     }
 }
 
@@ -155,7 +205,7 @@ struct OnboardingPageView: View {
             // Illustration
             illustrationView
                 .frame(maxWidth: .infinity)
-                .frame(height: UIScreen.main.bounds.height * 0.40)
+                .frame(height: 350) // Fixed height to avoid UIScreen.main deprecation warning
                 .padding(.horizontal, 20)
             
             // Title with highlighted word
@@ -213,6 +263,8 @@ struct OnboardingPageView: View {
             ReelsToRecipesIllustration()
         case .saveFavorites:
             SaveFavoritesIllustration()
+        case .pushNotification:
+            PushNotificationIllustration()
         }
     }
 }

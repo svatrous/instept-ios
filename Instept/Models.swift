@@ -197,10 +197,12 @@ struct RecipeDocument: Codable {
     let likes_count: Int?
     let created_at: Date?
     let hero_image_url: String?
+    let rating: Double?
+    let reviews_count: Int?
     let translations: [String: RecipeTranslation]?
     
     enum CodingKeys: String, CodingKey {
-        case source_url, likes_count, created_at, hero_image_url, translations
+        case source_url, likes_count, created_at, hero_image_url, rating, reviews_count, translations
     }
     
     init(from decoder: Decoder) throws {
@@ -208,6 +210,21 @@ struct RecipeDocument: Codable {
         source_url = try container.decodeIfPresent(String.self, forKey: .source_url)
         likes_count = try container.decodeIfPresent(Int.self, forKey: .likes_count)
         hero_image_url = try container.decodeIfPresent(String.self, forKey: .hero_image_url)
+        
+        if let r = try? container.decode(Double.self, forKey: .rating) {
+            rating = r
+        } else if let rInt = try? container.decode(Int.self, forKey: .rating) {
+            rating = Double(rInt)
+        } else {
+            rating = nil
+        }
+        
+        if let rc = try? container.decode(Int.self, forKey: .reviews_count) {
+            reviews_count = rc
+        } else {
+            reviews_count = nil
+        }
+        
         translations = try container.decodeIfPresent([String: RecipeTranslation].self, forKey: .translations)
         
         // Robust Date decoding
@@ -233,6 +250,8 @@ struct RecipeDocument: Codable {
         try container.encodeIfPresent(likes_count, forKey: .likes_count)
         try container.encodeIfPresent(created_at, forKey: .created_at)
         try container.encodeIfPresent(hero_image_url, forKey: .hero_image_url)
+        try container.encodeIfPresent(rating, forKey: .rating)
+        try container.encodeIfPresent(reviews_count, forKey: .reviews_count)
         try container.encodeIfPresent(translations, forKey: .translations)
     }
     
@@ -249,8 +268,9 @@ struct RecipeDocument: Codable {
             title: translation.title,
             description: translation.description,
             category: translation.category,
-            rating: translation.rating,
-            reviews_count: translation.reviews_count,
+            // Ignore fake ratings from translation, use root or 0
+            rating: rating ?? 0.0,
+            reviews_count: reviews_count ?? 0,
             time: translation.time,
             difficulty: translation.difficulty,
             calories: translation.calories,
