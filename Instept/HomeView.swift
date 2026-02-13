@@ -3,6 +3,8 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var showingAddRecipe = false
+    @State private var navigatedRecipe: Recipe?
+    @State private var isRecipeActive = false
     
     var body: some View {
         NavigationView {
@@ -50,13 +52,22 @@ struct HomeView: View {
                 }
             }
             .navigationBarHidden(true)
+            .background(
+                NavigationLink(isActive: $isRecipeActive, destination: {
+                    if let recipe = navigatedRecipe {
+                        RecipeOverviewView(recipe: recipe)
+                    } else {
+                        EmptyView()
+                    }
+                }) { EmptyView() }
+            )
             .sheet(isPresented: $showingAddRecipe) {
-                // Determine what to show here. 
-                // Currently ContentView is the "Add Recipe" flow.
-                // We might want to refactor ContentView into AddRecipeView or similar.
-                // For now, let's wrap ContentView's logic or just present a simplified version.
-                // But ContentView HAS NavigationView inside, so verify wrapper.
-                ContentView() 
+                ImportRecipeSheet { recipe in
+                    navigatedRecipe = recipe
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        isRecipeActive = true
+                    }
+                }
             }
             .task {
                 await viewModel.fetchData()
