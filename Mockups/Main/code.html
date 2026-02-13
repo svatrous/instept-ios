@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dark Cooking Home Screen Simplified</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#eb9947",
+              "background-light": "#f8f7f6",
+              "background-dark": "#211911",
+              "neutral-surface": "#ffffff",
+              "neutral-surface-dark": "#2c241b",
+              "neutral-surface-darker": "#1a140e",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            boxShadow: {
+              'soft': '0 4px 20px -2px rgba(235, 153, 71, 0.1)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-gray-100 font-display min-h-screen relative overflow-x-hidden">
+<div class="max-w-md mx-auto min-h-screen pb-6 bg-background-dark relative shadow-2xl overflow-hidden">
+<header class="px-6 pt-12 pb-8 flex justify-between items-center bg-background-dark sticky top-0 z-20">
+<div>
+<p class="text-gray-400 text-sm font-medium">Good Morning,</p>
+<h1 class="text-2xl font-bold text-white">Alex Johnson</h1>
+</div>
+<div class="relative">
+<img alt="Profile Avatar" class="w-12 h-12 rounded-full object-cover border-2 border-background-dark shadow-md" data-alt="Portrait of a smiling woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB23M4gJZQ5wXO5aEbUHGcqgxIwYd6MqASCFPXPXaFZi4J8o-hg9El-fmmae0n5v5KC-vpo-C1PFb1eASlr1h7sBddWR0p2ZUvpfFTpCTb5oy4xGCPqK1UKRiM05hQ0_LZuJVC6YH9pjdtzAwdqCU-Ygy4dg_rLF5VYKhMJp2zdSAFKUudsokisBIQQsAhPjXYecRXF6_QKh8SG39lSHSAlUHSi7aTcSo4uHOuxO93wJsZ8fqAHjUwNAyVnutGTTXLmPsjv9X5BEQ"/>
+<span class="absolute top-0 right-0 w-3 h-3 bg-primary rounded-full border-2 border-background-dark"></span>
+</div>
+</header>
+<section class="mb-8">
+<div class="px-6 flex justify-between items-end mb-4">
+<h2 class="text-lg font-bold text-white">My Recipes</h2>
+<a class="text-sm font-semibold text-primary hover:text-primary/80" href="#">See All</a>
+</div>
+<div class="flex overflow-x-auto px-6 space-x-4 no-scrollbar pb-4">
+<div class="flex-shrink-0 w-32 h-44 rounded-xl border-2 border-dashed border-primary/30 flex flex-col justify-center items-center cursor-pointer hover:bg-white/5 transition-colors group bg-white/5">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2 group-hover:bg-primary group-hover:text-white text-primary transition-colors">
+<span class="material-icons-round">add</span>
+</div>
+<span class="text-xs font-semibold text-primary">Create New</span>
+</div>
+<div class="flex-shrink-0 w-40 relative group">
+<div class="h-44 w-full rounded-xl overflow-hidden relative shadow-md">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+<img alt="Pasta dish top view" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" data-alt="Creamy mushroom pasta on plate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDObYDUb1q9TVdpJNQ-HkM4EjvqkAXKY-AUeBd6FR_t3DI4lhKOjh3KHqYwS25w2MELaeJvQ926REiT0PjddvhiSwmyrDOvUNPzkib1ysbZzSyA591ZlFZpMFUrYWlCwPd13iFVkfJ2mFCvJS9hT3l9Kw6kQxKidI1dJbCW4SlNRIR_sd6MzIXebbrzfQheU0VT8_o5twtJZlj1JdY96PyXLMHgqSDOBDzGgOkTfEN6JOG1HhFgqLTmj5qd1D5lODT7WD2NzArlNA"/>
+<div class="absolute top-2 right-2 z-20">
+<button class="bg-black/30 backdrop-blur-md p-1.5 rounded-full text-white hover:bg-primary hover:text-white transition-colors">
+<span class="material-icons-round text-sm">edit</span>
+</button>
+</div>
+<div class="absolute bottom-3 left-3 right-3 z-20">
+<h3 class="text-white text-sm font-bold truncate">Mom's Spaghetti</h3>
+<p class="text-gray-300 text-xs mt-0.5">35 mins</p>
+</div>
+</div>
+</div>
+<div class="flex-shrink-0 w-40 relative group">
+<div class="h-44 w-full rounded-xl overflow-hidden relative shadow-md">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+<img alt="Healthy salad bowl" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" data-alt="Fresh vegetable salad bowl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxX7bKXd378J4xReLn6H8EdpOS5Pq9IPlpr8Hm_A7VKm9XgeObH8hV2hPgtP5m1E8JkLilyPBmvUvBLctijM-t0q3wYM8iwj8nTqtHltkVQLibgpP9dnUxiH_Q7WDDnPELGOb5hsNwWxo27YiIyS_JVuDV5r2N4Op4xARAoDu9Na21dzjYi8GNeNEXTdXouz_cJqdT_tddw7raq-6ZimyJjvO76rwHMwFAklHYkylWqskWAk1LjZJNpIKFFbhmkeMenloGso1-2Q"/>
+<div class="absolute top-2 right-2 z-20">
+<button class="bg-black/30 backdrop-blur-md p-1.5 rounded-full text-white hover:bg-primary hover:text-white transition-colors">
+<span class="material-icons-round text-sm">edit</span>
+</button>
+</div>
+<div class="absolute bottom-3 left-3 right-3 z-20">
+<h3 class="text-white text-sm font-bold truncate">Vegan Power Bowl</h3>
+<p class="text-gray-300 text-xs mt-0.5">15 mins</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="mb-8 px-6">
+<h2 class="text-lg font-bold text-white mb-4">Popular Now</h2>
+<div class="relative w-full h-64 rounded-2xl overflow-hidden shadow-soft group cursor-pointer border border-white/5">
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10"></div>
+<img alt="Pizza detail shot" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" data-alt="Delicious pepperoni pizza slice" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYc_Fbs6GFsJWdVu5pAcav0WjUnFfTbBOE1qAxfRGXGMBH5ytGFNNovmlHP65wKq5CTjXcv-y0QL0E1e7EwryXlAqHQMeJKiA1xA_GsQnbmhv2W9GoK9NWy9-e6oD2Uwm2LAs6YHaU7pQPHbeZMRHA9p1l9nFWRaxOr0DuywPKo5OrOJ1aaEtRFsCaCFpB1VX5wZXALun3BNPF2nVnFrguAlA7fFr-mW8_ai_O8tbEx7s7L3ikjEVLJmzTfMNzoQsWIm8TGfGPYA"/>
+<div class="absolute top-4 left-4 z-20 bg-neutral-surface-darker/90 backdrop-blur-sm px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm border border-white/10">
+<span class="material-icons-round text-primary text-sm">star</span>
+<span class="text-xs font-bold text-white">4.9</span>
+<span class="text-xs text-gray-400">(2k+)</span>
+</div>
+<div class="absolute top-4 right-4 z-20">
+<button class="p-2 bg-black/30 backdrop-blur-md rounded-full text-white hover:bg-red-500 transition-colors">
+<span class="material-icons-round text-xl">favorite_border</span>
+</button>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-5 z-20">
+<div class="flex justify-between items-end">
+<div>
+<span class="inline-block px-2 py-1 bg-primary text-white text-[10px] font-bold uppercase tracking-wider rounded mb-2">Trending</span>
+<h3 class="text-xl font-bold text-white mb-1">Neapolitan Pizza</h3>
+<div class="flex items-center gap-4 text-gray-300 text-xs">
+<span class="flex items-center gap-1"><span class="material-icons-round text-sm">schedule</span> 45 mins</span>
+<span class="flex items-center gap-1"><span class="material-icons-round text-sm">restaurant</span> Medium</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="px-6 pb-24">
+<h2 class="text-lg font-bold text-white mb-4">Recently Added</h2>
+<div class="flex flex-col gap-4">
+<div class="bg-neutral-surface-dark p-3 rounded-xl shadow-sm flex items-center gap-4 hover:bg-neutral-surface-dark/80 transition-colors cursor-pointer border border-white/5">
+<div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
+<img alt="Salad close up" class="w-full h-full object-cover" data-alt="Green bowl with avocado salad" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfZmmhdMu4GncOkQ-X5loXro-hE6ID3myWxuxyEFB6fDQmsEZIJwUVvjMsgvWH9WOYXj11B-vYdHJ9YwCxypHPY9QNZplGndOAPeG1eZlWeWWnu1Z07Od8oMceE11FnzrO0bZoFr129_eOmViYq3S-2gHcNbbMs3jbEfVzrXguNjWMBLpJRuhR1RASE-jFZd2WbwTwyLTOOyWoyEKJWeBs43UJyYbxNH8gsmmhIlI1qws_2pX3tOKT3jdQeOV91s6p_8f5N9bD7g"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-base font-bold text-white truncate">Avocado Toast Supreme</h4>
+<p class="text-xs text-gray-400 mb-2">By Sarah Jenkins</p>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-green-900/40 text-green-300 border border-green-800/50 text-[10px] font-semibold rounded">Easy</span>
+<span class="text-xs text-gray-400 flex items-center gap-1">
+<span class="material-icons-round text-sm text-primary">schedule</span> 10 min
+                        </span>
+</div>
+</div>
+<button class="text-gray-500 hover:text-primary transition-colors pr-2">
+<span class="material-icons-round">chevron_right</span>
+</button>
+</div>
+<div class="bg-neutral-surface-dark p-3 rounded-xl shadow-sm flex items-center gap-4 hover:bg-neutral-surface-dark/80 transition-colors cursor-pointer border border-white/5">
+<div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
+<img alt="Cocktail drink" class="w-full h-full object-cover" data-alt="Colorful layered drink in glass" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd4Li8CX1CldzqePqlFY4EIGsHueHS-oe4WlTg6cICBj9GaR0PiMuo6l0ClOVhZZSrJT75QFaKnhiaNDGMyHuibKN5ebVwkbQaPht-678Ei0RWa1IiPLB3iEejtkqjf4pjfTiSucdNTgzA35LJj94qZIqNPFDqrq--OzpX115Faa08Vm0R8wXIFDWclBbIQGQ8U-DyEaXTcs_QNAIv6W1-9nuhTFWackNLyIwM7QKlokC3tQDZU3dGc2RulXiYnOYBFRHmKGeUKA"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-base font-bold text-white truncate">Berry Blast Smoothie</h4>
+<p class="text-xs text-gray-400 mb-2">By Mike Ross</p>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-green-900/40 text-green-300 border border-green-800/50 text-[10px] font-semibold rounded">Easy</span>
+<span class="text-xs text-gray-400 flex items-center gap-1">
+<span class="material-icons-round text-sm text-primary">schedule</span> 5 min
+                        </span>
+</div>
+</div>
+<button class="text-gray-500 hover:text-primary transition-colors pr-2">
+<span class="material-icons-round">chevron_right</span>
+</button>
+</div>
+<div class="bg-neutral-surface-dark p-3 rounded-xl shadow-sm flex items-center gap-4 hover:bg-neutral-surface-dark/80 transition-colors cursor-pointer border border-white/5">
+<div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
+<img alt="Chocolate dessert" class="w-full h-full object-cover" data-alt="Rich chocolate brownie dessert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaI5a3AF6KeDmxeatIAXLfnFu3QzKXXMbclHV_1N_AFwyyNcIuTFGDgd7Fp3hdCpMjGRi2KvJvtZXt6OnUCir6_uJwJJOmkQjLEs0bCAsUatFOlV1q4axR-tGdyUpRypd3xl_EbJWkYRTR7jS9Szqlk4pxzcUO8O37R77WbjMHg3w3wbiLswKmybjmLaBZrFVhKLygwM1mo9CXfel0-fCX7r9WDrN1LA1rewnrTCGgirD3Y_ZcBEHRpU6xNlZVoNwQUX9JC3QH-A"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-base font-bold text-white truncate">Midnight Brownies</h4>
+<p class="text-xs text-gray-400 mb-2">By Chef Clara</p>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-orange-900/40 text-orange-300 border border-orange-800/50 text-[10px] font-semibold rounded">Medium</span>
+<span class="text-xs text-gray-400 flex items-center gap-1">
+<span class="material-icons-round text-sm text-primary">schedule</span> 45 min
+                        </span>
+</div>
+</div>
+<button class="text-gray-500 hover:text-primary transition-colors pr-2">
+<span class="material-icons-round">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<div class="fixed bottom-8 right-6 z-40">
+<button class="w-14 h-14 bg-primary rounded-full shadow-lg shadow-primary/20 flex items-center justify-center text-white hover:bg-orange-600 hover:scale-105 active:scale-95 transition-all duration-300 ring-4 ring-background-dark">
+<span class="material-icons-round text-3xl">add</span>
+</button>
+</div>
+</div>
+
+</body></html>

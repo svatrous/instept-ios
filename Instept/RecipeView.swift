@@ -10,7 +10,7 @@ import SwiftUI
 struct RecipeView: View {
     let recipe: Recipe
     @Environment(\.dismiss) var dismiss
-    @State private var currentStepIndex = 0
+    @State private var currentStepIndex: Int? = 0
     
     // Change this to your backend URL
     private let backendUrl = "https://web-production-11711.up.railway.app"
@@ -18,79 +18,88 @@ struct RecipeView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.black.edgesIgnoringSafeArea(.all)
+                Color.black.ignoresSafeArea()
                 
-                // Rotated TabView for Vertical Paging
-                TabView(selection: $currentStepIndex) {
-                    ForEach(Array(recipe.steps.enumerated()), id: \.offset) { index, step in
-                        StepFullScreenView(
-                            step: step,
-                            index: index,
-                            totalSteps: recipe.steps.count,
-                            backendUrl: backendUrl,
-                            screenSize: geometry.size
-                        )
+                // Vertical ScrollView with Paging
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack(spacing: 0) {
+                        // Steps
+                        ForEach(Array(recipe.steps.enumerated()), id: \.offset) { index, step in
+                            StepFullScreenView(
+                                step: step,
+                                index: index,
+                                totalSteps: recipe.steps.count,
+                                backendUrl: backendUrl,
+                                screenSize: geometry.size
+                            )
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .id(index)
+                        }
+                        
+                        // Finish Screen
+                        FinishCookingView(recipe: recipe, onDismiss: {
+                            dismiss()
+                        })
                         .frame(width: geometry.size.width, height: geometry.size.height)
-                        .rotationEffect(.degrees(-90)) // Rotate content back to normal
-                        .tag(index)
+                        .id(recipe.steps.count)
                     }
+                    .scrollTargetLayout()
                 }
-                .frame(width: geometry.size.height, height: geometry.size.width) // Swap dimensions for Vertical Paging
-                .rotationEffect(.degrees(90), anchor: .center) // Rotate TabView
-                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-                .tabViewStyle(.page(indexDisplayMode: .never))
+                .scrollTargetBehavior(.paging)
+                .scrollPosition(id: $currentStepIndex)
                 .ignoresSafeArea()
-                .edgesIgnoringSafeArea(.all)
                 
                 // Top Overlay: Progress Bar and Controls
-                VStack {
-                    // Progress Bar
-                    HStack(spacing: 4) {
-                        ForEach(0..<recipe.steps.count, id: \.self) { index in
-                            Capsule()
-                                .fill(index <= currentStepIndex ? Color.orange : Color.gray.opacity(0.5))
-                                .frame(height: 4)
-                                .animation(.easeInOut, value: currentStepIndex)
+                if let current = currentStepIndex, current < recipe.steps.count {
+                    VStack {
+                        // Progress Bar
+                        HStack(spacing: 4) {
+                            ForEach(0...recipe.steps.count, id: \.self) { index in
+                                Capsule()
+                                    .fill(index <= current ? Color.orange : Color.gray.opacity(0.5))
+                                    .frame(height: 4)
+                                    .animation(.easeInOut, value: current)
+                            }
                         }
-                    }
-                    .padding(.top, 60) // Extra padding for Dynamic Island/Notch
-                    .padding(.horizontal, 10)
+                        .padding(.top, 60)
+                        .padding(.horizontal, 10)
                     
-                    // Header Controls
-                    HStack {
-                        // Recipe Title Pill
-                        Text(recipe.title)
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.black.opacity(0.6))
-                            .clipShape(Capsule())
-                            .lineLimit(1)
+                        // Header Controls
+                        HStack {
+                            // Recipe Title Pill
+                            Text(recipe.title)
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.black.opacity(0.6))
+                                .clipShape(Capsule())
+                                .lineLimit(1)
+                            
+                            Spacer()
+                            
+                            // Close Button
+                            Button(action: {
+                                dismiss()
+                            }) {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .padding(10)
+                                    .background(Color.black.opacity(0.6))
+                                    .clipShape(Circle())
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 10)
                         
                         Spacer()
-                        
-                        // Close Button
-                        Button(action: {
-                            dismiss()
-                        }) {
-                            Image(systemName: "xmark")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.white)
-                                .padding(10)
-                                .background(Color.black.opacity(0.6))
-                                .clipShape(Circle())
-                        }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 10)
-                    
-                    Spacer()
                 }
             }
         }
-        .edgesIgnoringSafeArea(.all) // Ensure GeometryReader sees full screen
+        .ignoresSafeArea()
         .navigationBarHidden(true)
         .statusBar(hidden: true)
     }
@@ -101,7 +110,7 @@ struct StepFullScreenView: View {
     let index: Int
     let totalSteps: Int
     let backendUrl: String
-    let screenSize: CGSize // Pass screen size to handle layout better
+    let screenSize: CGSize
     
     private func getImageUrl(_ path: String?) -> URL? {
         guard let path = path, !path.isEmpty else { return nil }
@@ -120,7 +129,6 @@ struct StepFullScreenView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: screenSize.width, height: screenSize.height)
-                        .ignoresSafeArea(.all)
                         .clipped()
                 } placeholder: {
                      ZStack {
@@ -133,7 +141,6 @@ struct StepFullScreenView: View {
                 Rectangle()
                     .fill(Color.gray)
                     .frame(width: screenSize.width, height: screenSize.height)
-                    .ignoresSafeArea()
             }
             
             // Gradient Overlay
@@ -142,12 +149,10 @@ struct StepFullScreenView: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-            .frame(height: screenSize.height * 0.6) // Limit height to bottom 60%
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom) // Align to bottom
-            .ignoresSafeArea()
+            .frame(height: screenSize.height * 0.6)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             
             // Text Content Overlay
-
             VStack(alignment: .leading, spacing: 12) {
                 // Step Indicator
                 Text("STEP \(index + 1) of \(totalSteps)")
@@ -161,7 +166,7 @@ struct StepFullScreenView: View {
                 
                 // Description
                 Text(step.description)
-                    .font(.title3) // Slightly smaller for safety
+                    .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .fixedSize(horizontal: false, vertical: true)
@@ -190,11 +195,41 @@ struct StepFullScreenView: View {
                 }
                 .padding(.top, 10)
             }
-            .padding(.horizontal, 30) // Increased horizontal padding to prevent cutoff
-            .padding(.bottom, 50) // Increased bottom padding for safe area
-            .frame(width: screenSize.width, alignment: .leading) // Ensure full width usage but aligned left
+            .padding(.horizontal, 30)
+            .padding(.bottom, 50)
+            .frame(width: screenSize.width, alignment: .leading)
         }
         .frame(width: screenSize.width, height: screenSize.height)
-        .ignoresSafeArea()
     }
+}
+
+#Preview {
+    RecipeView(
+        recipe: Recipe(
+            id: "preview-1",
+            source_url: nil,
+            title: "Creamy Mushroom Risotto",
+            description: "A classic Italian risotto.",
+            category: "Italian",
+            rating: 4.8,
+            reviews_count: 124,
+            time: "45 min",
+            difficulty: "Medium",
+            calories: "520 kcal",
+            author_name: "Chef Mario",
+            author_avatar: "",
+            hero_image_url: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800",
+            created_at: nil,
+            likes_count: 42,
+            ingredients: [
+                Ingredient(name: "Arborio Rice", amount: "300", unit: "g"),
+                Ingredient(name: "Mushrooms", amount: "200", unit: "g")
+            ],
+            steps: [
+                Step(description: "Heat olive oil in a large pan over medium heat. Add diced onions and sauté until translucent.", image_url: "https://images.unsplash.com/photo-1556909114-44e3e70034e2?w=800"),
+                Step(description: "Add sliced mushrooms and cook for 5 minutes until golden brown.", image_url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800"),
+                Step(description: "Add arborio rice and toast for 2 minutes, stirring constantly.", image_url: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800")
+            ]
+        )
+    )
 }

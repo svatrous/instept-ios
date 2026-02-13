@@ -20,7 +20,7 @@ struct InsteptApp: App {
         WindowGroup {
             Group {
                 if hasCompletedOnboarding {
-                    ContentView()
+                    HomeView()
                 } else {
                     OnboardingView()
                 }
