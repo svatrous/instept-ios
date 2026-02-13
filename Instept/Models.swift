@@ -16,7 +16,9 @@ struct Step: Codable, Hashable {
     let image_url: String?
 }
 
-struct Recipe: Codable {
+struct Recipe: Codable, Identifiable {
+    var id: String?
+    let source_url: String?
     let title: String
     let description: String
     let category: String

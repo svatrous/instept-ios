@@ -14,7 +14,13 @@ class NetworkManager {
         request.timeoutInterval = 600 // 5 minutes timeout for image generation
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let language = Locale.current.language.languageCode?.identifier ?? "en"
+        
+        // Use preferredLanguages to get the system language, not the app's running language
+        var language = "en"
+        if let preferredIdentifier = Locale.preferredLanguages.first {
+            language = Locale(identifier: preferredIdentifier).language.languageCode?.identifier ?? "en"
+        }
+        print("Requesting language: \(language)")
         let body = AnalyzeRequest(url: url, language: language)
         request.httpBody = try JSONEncoder().encode(body)
         

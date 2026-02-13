@@ -3,17 +3,29 @@ import SwiftUI
 struct RecipeOverviewView: View {
     let recipe: Recipe
     @Environment(\.dismiss) var dismiss
+    @State private var showFullDescription = false
     
     // Change this to your backend URL
     private let backendUrl = "https://web-production-11711.up.railway.app"
+
+    // Helper to handle both local and remote (Firebase) URLs
+    private func getImageUrl(_ path: String?) -> URL? {
+        guard let path = path, !path.isEmpty else { return nil }
+        if path.hasPrefix("http") {
+            return URL(string: path)
+        }
+        return URL(string: "\(backendUrl)\(path)")
+    }
+    
+    @StateObject private var userManager = UserManager.shared
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 // Hero Image Section
                 ZStack(alignment: .topLeading) {
-                    if let heroUrl = recipe.hero_image_url, let url = URL(string: "\(backendUrl)\(heroUrl)") {
-                        AsyncImage(url: url) { image in
+                    if let url = getImageUrl(recipe.hero_image_url) {
+                        CachedAsyncImage(url: url) { image in
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -35,8 +47,58 @@ struct RecipeOverviewView: View {
                             .frame(height: 350)
                     }
                     
-                    // Navbar Buttons (Visual only for now, since we are in standard NavView)
-                    // We can rely on standard back button or add custom overlay
+                    // Header Buttons (Back + Socials)
+                    HStack {
+                        // Custom Back Button
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white)
+                                .padding(10)
+                                .background(Color.black.opacity(0.5))
+                                .clipShape(Circle())
+                        }
+                        
+                        Spacer()
+                        
+                        // Right Side Buttons: Instagram, Like, Share
+                        HStack(spacing: 12) {
+                            Button(action: { /* Open Instagram */ }) {
+                                Image(systemName: "camera") // Using camera as proxy for Instagram icon
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .padding(10)
+                                    .background(Color.black.opacity(0.5))
+                                    .clipShape(Circle())
+                            }
+                            
+                            Button(action: {
+                                if let id = recipe.id {
+                                    userManager.toggleSaveRecipe(recipeId: id)
+                                }
+                            }) {
+                                Image(systemName: (recipe.id != nil && userManager.isSaved(recipeId: recipe.id!)) ? "heart.fill" : "heart")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor((recipe.id != nil && userManager.isSaved(recipeId: recipe.id!)) ? .red : .white)
+                                    .padding(10)
+                                    .background(Color.black.opacity(0.5))
+                                    .clipShape(Circle())
+                            }
+                            
+                            Button(action: { /* Share action */ }) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .padding(10)
+                                    .background(Color.black.opacity(0.5))
+                                    .clipShape(Circle())
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 50) // Adjust for status bar
                 }
                 
                 VStack(alignment: .leading, spacing: 16) {
@@ -73,12 +135,31 @@ struct RecipeOverviewView: View {
                             .lineLimit(3)
                         
                         Button(action: {
-                            // Expand text action
+                            showFullDescription = true
                         }) {
                             Text("Read more")
                                 .font(.footnote)
                                 .foregroundColor(.orange)
                                 .fontWeight(.bold)
+                        }
+                        .sheet(isPresented: $showFullDescription) {
+                            VStack(alignment: .leading, spacing: 20) {
+                                HStack {
+                                    Text("Description")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                    Spacer()
+                                    Button("Close") { showFullDescription = false }
+                                }
+                                .padding()
+                                
+                                ScrollView {
+                                    Text(recipe.description)
+                                        .font(.body)
+                                        .padding(.horizontal)
+                                }
+                            }
+                            .presentationDetents([.medium, .large])
                         }
                     }
                     
@@ -112,10 +193,21 @@ struct RecipeOverviewView: View {
                     
                     // Author Section
                     HStack {
-                        Circle() // Avatar placeholder
-                            .fill(Color.gray)
-                            .frame(width: 40, height: 40)
-                            .overlay(Text(recipe.author_name.prefix(1)).foregroundColor(.white))
+                        // Avatar placeholder
+                        if let url = URL(string: recipe.author_avatar), !recipe.author_avatar.isEmpty {
+                             CachedAsyncImage(url: url) { image in
+                                 image.resizable().aspectRatio(contentMode: .fill)
+                             } placeholder: {
+                                 Color.gray
+                             }
+                             .frame(width: 40, height: 40)
+                             .clipShape(Circle())
+                        } else {
+                            Circle()
+                                .fill(Color.gray)
+                                .frame(width: 40, height: 40)
+                                .overlay(Text(recipe.author_name.prefix(1)).foregroundColor(.white))
+                        }
                         
                         VStack(alignment: .leading) {
                             Text("RECIPE BY")
@@ -133,7 +225,7 @@ struct RecipeOverviewView: View {
                     .cornerRadius(15)
                     .padding(.vertical, 10)
                     
-                    // Start Cooking Button (Navigation Link)
+                    // Start Cooking Button
                     NavigationLink(destination: RecipeView(recipe: recipe)) {
                         Text("Start Cooking")
                             .font(.headline)
@@ -151,8 +243,9 @@ struct RecipeOverviewView: View {
                 .offset(y: -40) // Overlap with hero image slightly
             }
         }
+        .edgesIgnoringSafeArea(.top)
         .background(Color(red: 0.1, green: 0.1, blue: 0.1).edgesIgnoringSafeArea(.all))
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
     }
 }
 

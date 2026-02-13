@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding: Reel to Recipe Import</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#eb9947",
+              "background-light": "#f8f7f6",
+              "background-dark": "#211911",
+              "neutral-surface": "#ffffff",
+              "neutral-surface-dark": "#2c241b",
+              "neutral-surface-darker": "#1a140e",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            boxShadow: {
+              'soft': '0 4px 20px -2px rgba(235, 153, 71, 0.1)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-gray-100 font-display min-h-screen relative overflow-x-hidden flex items-center justify-center">
+<div class="w-full max-w-md mx-auto h-screen bg-background-dark relative shadow-2xl overflow-hidden flex flex-col">
+<div class="flex-1 relative w-full flex items-center justify-center pt-8 overflow-hidden">
+<div class="absolute top-10 left-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+<div class="absolute bottom-20 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+<div class="relative z-10 w-full px-8 h-[460px] flex items-center justify-center perspective-[1000px]">
+<div class="relative w-64 h-[440px] bg-neutral-surface-darker rounded-[2.5rem] border-4 border-neutral-surface-dark shadow-2xl overflow-hidden transform rotate-[-5deg] hover:rotate-0 transition-transform duration-700 ease-out">
+<div class="absolute inset-0 flex flex-col">
+<div class="h-1/2 relative overflow-hidden">
+<img alt="Video Reel Placeholder" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd4Li8CX1CldzqePqlFY4EIGsHueHS-oe4WlTg6cICBj9GaR0PiMuo6l0ClOVhZZSrJT75QFaKnhiaNDGMyHuibKN5ebVwkbQaPht-678Ei0RWa1IiPLB3iEejtkqjf4pjfTiSucdNTgzA35LJj94qZIqNPFDqrq--OzpX115Faa08Vm0R8wXIFDWclBbIQGQ8U-DyEaXTcs_QNAIv6W1-9nuhTFWackNLyIwM7QKlokC3tQDZU3dGc2RulXiYnOYBFRHmKGeUKA"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+<span class="material-icons-round text-white text-4xl opacity-80">play_circle</span>
+</div>
+<div class="absolute right-3 bottom-12 flex flex-col gap-2 items-center">
+<div class="w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"><span class="material-icons-round text-white text-[10px]">favorite</span></div>
+<div class="w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"><span class="material-icons-round text-white text-[10px]">chat_bubble</span></div>
+</div>
+</div>
+<div class="h-12 bg-gradient-to-b from-primary/90 to-primary flex items-center justify-center relative z-20 shadow-lg">
+<span class="material-icons-round text-white animate-pulse">keyboard_double_arrow_down</span>
+<div class="absolute left-0 right-0 top-0 h-[1px] bg-white/20"></div>
+<div class="absolute left-0 right-0 bottom-0 h-[1px] bg-white/20"></div>
+</div>
+<div class="h-1/2 bg-white p-4 relative">
+<div class="w-12 h-1 bg-gray-200 rounded-full mx-auto mb-3"></div>
+<div class="flex gap-3 mb-3">
+<div class="w-12 h-12 rounded-lg bg-orange-100 flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd4Li8CX1CldzqePqlFY4EIGsHueHS-oe4WlTg6cICBj9GaR0PiMuo6l0ClOVhZZSrJT75QFaKnhiaNDGMyHuibKN5ebVwkbQaPht-678Ei0RWa1IiPLB3iEejtkqjf4pjfTiSucdNTgzA35LJj94qZIqNPFDqrq--OzpX115Faa08Vm0R8wXIFDWclBbIQGQ8U-DyEaXTcs_QNAIv6W1-9nuhTFWackNLyIwM7QKlokC3tQDZU3dGc2RulXiYnOYBFRHmKGeUKA"/>
+</div>
+<div class="flex-1">
+<div class="h-3 bg-gray-800 rounded w-3/4 mb-1.5"></div>
+<div class="h-2 bg-gray-400 rounded w-1/2"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-[8px] font-bold">1</div>
+<div class="h-2 bg-gray-300 rounded w-full"></div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-[8px] font-bold">2</div>
+<div class="h-2 bg-gray-300 rounded w-5/6"></div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-[8px] font-bold">3</div>
+<div class="h-2 bg-gray-300 rounded w-4/5"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute -right-12 top-10 bg-neutral-surface-dark p-2 rounded-xl shadow-xl border border-white/5 flex items-center gap-2 rotate-[15deg] animate-bounce" style="animation-duration: 3s;">
+<span class="material-icons-round text-primary">auto_fix_high</span>
+<span class="text-[10px] font-bold text-white">Magic!</span>
+</div>
+<div class="absolute -left-8 bottom-20 bg-neutral-surface-dark p-2 rounded-xl shadow-xl border border-white/5 flex items-center gap-2 -rotate-[10deg] animate-bounce" style="animation-duration: 4s;">
+<span class="material-icons-round text-green-400">check_circle</span>
+<span class="text-[10px] font-bold text-white">Saved</span>
+</div>
+</div>
+</div>
+</div>
+<div class="px-8 pb-10 pt-4 z-20 flex flex-col items-center text-center">
+<h1 class="text-3xl font-bold text-white mb-4 leading-tight">
+            From Reels to <br/><span class="text-primary">Recipes</span>
+</h1>
+<p class="text-gray-400 text-base mb-10 max-w-[300px] leading-relaxed">
+            Import any cooking Reel and we will turn it into a clean, step-by-step recipe saved to your account.
+        </p>
+<div class="flex gap-2 mb-8">
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+<div class="w-6 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+</div>
+<div class="w-full space-y-4">
+<button class="w-full bg-primary hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-primary/25 active:scale-95 text-lg">
+                Next
+            </button>
+</div>
+</div>
+</div>
+</body></html>
