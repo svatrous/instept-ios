@@ -64,6 +64,26 @@ class UserManager: ObservableObject {
         }
     }
     
+    func saveRecipe(recipeId: String) {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        // Optimistic update
+        if !savedRecipeIds.contains(recipeId) {
+             savedRecipeIds.insert(recipeId)
+        }
+        
+        let userRef = db.collection("users").document(userId)
+        
+        userRef.setData([
+            "saved_recipes": FieldValue.arrayUnion([recipeId])
+        ], merge: true) { [weak self] error in
+            if let error = error {
+                print("Error auto-saving recipe: \(error.localizedDescription)")
+                // Rollback if needed, but arrayUnion is idempotent so safe to retry or ignore
+            }
+        }
+    }
+    
     func isSaved(recipeId: String) -> Bool {
         return savedRecipeIds.contains(recipeId)
     }

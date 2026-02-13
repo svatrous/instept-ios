@@ -23,6 +23,11 @@ class RecipeViewModel: ObservableObject {
             do {
                 let result = try await networkManager.analyzeVideo(url: url)
                 self.recipe = result
+                
+                // Auto-save recipe
+                if let recipeId = result.id {
+                    UserManager.shared.saveRecipe(recipeId: recipeId)
+                }
             } catch {
                 self.errorMessage = error.localizedDescription
             }
