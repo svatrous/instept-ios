@@ -140,38 +140,51 @@ struct RecipeOverviewView: View {
                             }
                             
                             // Author Section
-                            HStack {
-                                // Avatar placeholder
-                                if let url = URL(string: recipe.author_avatar), !recipe.author_avatar.isEmpty {
-                                     CachedAsyncImage(url: url) { image in
-                                         image.resizable().aspectRatio(contentMode: .fill)
-                                     } placeholder: {
-                                         Color.gray
-                                     }
-                                     .frame(width: 40, height: 40)
-                                     .clipShape(Circle())
-                                } else {
-                                    Circle()
-                                    .fill(Color.gray)
-                                    .frame(width: 40, height: 40)
-                                    .overlay(Text(recipe.author_name.prefix(1)).foregroundColor(.white))
+                            Button(action: {
+                                if let urlString = recipe.author_url, let url = URL(string: urlString) {
+                                    UIApplication.shared.open(url)
                                 }
-                                
-                                VStack(alignment: .leading) {
-                                    Text("RECIPE BY")
-                                        .font(.caption)
-                                        .foregroundColor(.orange)
-                                        .fontWeight(.bold)
-                                    Text(recipe.author_name)
-                                        .font(.headline)
-                                        .foregroundColor(.white)
+                            }) {
+                                HStack {
+                                    // Avatar placeholder
+                                    if let url = URL(string: recipe.author_avatar), !recipe.author_avatar.isEmpty {
+                                         CachedAsyncImage(url: url) { image in
+                                             image.resizable().aspectRatio(contentMode: .fill)
+                                         } placeholder: {
+                                             Color.gray
+                                         }
+                                         .frame(width: 40, height: 40)
+                                         .clipShape(Circle())
+                                    } else {
+                                        Circle()
+                                        .fill(Color.gray)
+                                        .frame(width: 40, height: 40)
+                                        .overlay(Text(recipe.author_name.prefix(1)).foregroundColor(.white))
+                                    }
+                                    
+                                    VStack(alignment: .leading) {
+                                        Text("RECIPE BY")
+                                            .font(.caption)
+                                            .foregroundColor(.orange)
+                                            .fontWeight(.bold)
+                                        Text(recipe.author_name)
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                    }
+                                    Spacer()
+                                    
+                                    if recipe.author_url != nil {
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
                                 }
-                                Spacer()
+                                .padding(20)
+                                .background(Color.white.opacity(0.05))
+                                .cornerRadius(15)
+                                .padding(.vertical, 10)
                             }
-                            .padding(20)
-                            .background(Color.white.opacity(0.05))
-                            .cornerRadius(15)
-                            .padding(.vertical, 10)
+                            .buttonStyle(PlainButtonStyle())
                             
                         }
                         .padding(20)

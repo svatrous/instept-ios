@@ -71,6 +71,7 @@ struct Recipe: Codable, Identifiable {
     let calories: String
     let author_name: String
     let author_avatar: String
+    var author_url: String?
     var hero_image_url: String?
     var created_at: Date?
     var likes_count: Int?
@@ -79,7 +80,7 @@ struct Recipe: Codable, Identifiable {
     var language: String?
     
     enum CodingKeys: String, CodingKey {
-        case id, source_url, title, description, category, rating, reviews_count, time, difficulty, calories, author_name, author_avatar, hero_image_url, created_at, likes_count, ingredients, steps, language
+        case id, source_url, title, description, category, rating, reviews_count, time, difficulty, calories, author_name, author_avatar, author_url, hero_image_url, created_at, likes_count, ingredients, steps, language
     }
     
     init(from decoder: Decoder) throws {
@@ -126,6 +127,7 @@ struct Recipe: Codable, Identifiable {
         
         author_name = try container.decodeIfPresent(String.self, forKey: .author_name) ?? "Chef"
         author_avatar = try container.decodeIfPresent(String.self, forKey: .author_avatar) ?? ""
+        author_url = try container.decodeIfPresent(String.self, forKey: .author_url)
         hero_image_url = try container.decodeIfPresent(String.self, forKey: .hero_image_url)
         likes_count = try container.decodeIfPresent(Int.self, forKey: .likes_count)
         
@@ -164,6 +166,7 @@ struct Recipe: Codable, Identifiable {
         try container.encode(calories, forKey: .calories)
         try container.encode(author_name, forKey: .author_name)
         try container.encode(author_avatar, forKey: .author_avatar)
+        try container.encodeIfPresent(author_url, forKey: .author_url)
         try container.encodeIfPresent(hero_image_url, forKey: .hero_image_url)
         try container.encodeIfPresent(created_at, forKey: .created_at)
         try container.encodeIfPresent(likes_count, forKey: .likes_count)
@@ -173,7 +176,7 @@ struct Recipe: Codable, Identifiable {
     }
     
     // Memberwise Init
-    init(id: String? = nil, source_url: String? = nil, title: String, description: String, category: String, rating: Double, reviews_count: Int, time: String, difficulty: String, calories: String, author_name: String, author_avatar: String, hero_image_url: String? = nil, created_at: Date? = nil, likes_count: Int? = nil, ingredients: [Ingredient], steps: [Step], language: String? = "en") {
+    init(id: String? = nil, source_url: String? = nil, title: String, description: String, category: String, rating: Double, reviews_count: Int, time: String, difficulty: String, calories: String, author_name: String, author_avatar: String, author_url: String? = nil, hero_image_url: String? = nil, created_at: Date? = nil, likes_count: Int? = nil, ingredients: [Ingredient], steps: [Step], language: String? = "en") {
         self.id = id
         self.source_url = source_url
         self.title = title
@@ -186,6 +189,7 @@ struct Recipe: Codable, Identifiable {
         self.calories = calories
         self.author_name = author_name
         self.author_avatar = author_avatar
+        self.author_url = author_url
         self.hero_image_url = hero_image_url
         self.created_at = created_at
         self.likes_count = likes_count
@@ -201,12 +205,13 @@ struct RecipeDocument: Codable {
     let likes_count: Int?
     let created_at: Date?
     let hero_image_url: String?
+    let author_url: String?
     let rating: Double?
     let reviews_count: Int?
     let translations: [String: RecipeTranslation]?
     
     enum CodingKeys: String, CodingKey {
-        case source_url, likes_count, created_at, hero_image_url, rating, reviews_count, translations
+        case source_url, likes_count, created_at, hero_image_url, author_url, rating, reviews_count, translations
     }
     
     init(from decoder: Decoder) throws {
@@ -214,6 +219,7 @@ struct RecipeDocument: Codable {
         source_url = try container.decodeIfPresent(String.self, forKey: .source_url)
         likes_count = try container.decodeIfPresent(Int.self, forKey: .likes_count)
         hero_image_url = try container.decodeIfPresent(String.self, forKey: .hero_image_url)
+        author_url = try container.decodeIfPresent(String.self, forKey: .author_url)
         
         if let r = try? container.decode(Double.self, forKey: .rating) {
             rating = r
@@ -254,6 +260,7 @@ struct RecipeDocument: Codable {
         try container.encodeIfPresent(likes_count, forKey: .likes_count)
         try container.encodeIfPresent(created_at, forKey: .created_at)
         try container.encodeIfPresent(hero_image_url, forKey: .hero_image_url)
+        try container.encodeIfPresent(author_url, forKey: .author_url)
         try container.encodeIfPresent(rating, forKey: .rating)
         try container.encodeIfPresent(reviews_count, forKey: .reviews_count)
         try container.encodeIfPresent(translations, forKey: .translations)
@@ -293,6 +300,7 @@ struct RecipeDocument: Codable {
             calories: translation.calories,
             author_name: translation.author_name,
             author_avatar: translation.author_avatar,
+            author_url: author_url ?? translation.author_url,
             hero_image_url: hero_image_url ?? translation.hero_image_url, // Prefer root hero, fallback to translation
             created_at: created_at,
             likes_count: likes_count,
@@ -315,12 +323,13 @@ struct RecipeTranslation: Codable {
     let calories: String
     let author_name: String
     let author_avatar: String
+    let author_url: String?
     let hero_image_url: String?
     let ingredients: [Ingredient]
     let steps: [Step]
     
     enum CodingKeys: String, CodingKey {
-        case title, description, category, rating, reviews_count, time, difficulty, calories, author_name, author_avatar, hero_image_url, ingredients, steps
+        case title, description, category, rating, reviews_count, time, difficulty, calories, author_name, author_avatar, author_url, hero_image_url, ingredients, steps
     }
     
     init(from decoder: Decoder) throws {
@@ -363,6 +372,7 @@ struct RecipeTranslation: Codable {
         
         author_name = try container.decodeIfPresent(String.self, forKey: .author_name) ?? "Chef"
         author_avatar = try container.decodeIfPresent(String.self, forKey: .author_avatar) ?? ""
+        author_url = try container.decodeIfPresent(String.self, forKey: .author_url)
         hero_image_url = try container.decodeIfPresent(String.self, forKey: .hero_image_url)
         ingredients = try container.decodeIfPresent([Ingredient].self, forKey: .ingredients) ?? []
         steps = try container.decodeIfPresent([Step].self, forKey: .steps) ?? []
@@ -380,6 +390,7 @@ struct RecipeTranslation: Codable {
          try container.encode(calories, forKey: .calories)
          try container.encode(author_name, forKey: .author_name)
          try container.encode(author_avatar, forKey: .author_avatar)
+         try container.encodeIfPresent(author_url, forKey: .author_url)
          try container.encodeIfPresent(hero_image_url, forKey: .hero_image_url)
          try container.encode(ingredients, forKey: .ingredients)
          try container.encode(steps, forKey: .steps)
