@@ -285,6 +285,7 @@ struct RecipeCardLarge: View {
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
+                    .multilineTextAlignment(.leading)
                 
                 HStack(spacing: 12) {
                     Label(recipe.time, systemImage: "clock")

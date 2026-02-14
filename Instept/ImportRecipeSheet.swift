@@ -12,6 +12,7 @@ struct ImportRecipeSheet: View {
     @State private var recipeURL: String = ""
     @State private var isImporting: Bool = false
     @State private var showProcessingView: Bool = false
+    @State private var processingContentHeight: CGFloat = 600
     @State private var showError: Bool = false
     @State private var errorMessage: String = ""
     
@@ -163,11 +164,13 @@ struct ImportRecipeSheet: View {
         } message: {
             Text(errorMessage)
         }
-        .fullScreenCover(isPresented: $showProcessingView) {
-            ProcessingView(onGotIt: {
+        .sheet(isPresented: $showProcessingView) {
+            ProcessingView(contentHeight: $processingContentHeight, onGotIt: {
                 showProcessingView = false
                 dismiss() // Close the sheet entirely
             })
+            .presentationDetents([.height(processingContentHeight)])
+            .presentationDragIndicator(.visible)
         }
     }
     

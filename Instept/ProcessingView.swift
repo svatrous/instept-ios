@@ -10,6 +10,8 @@ struct ProcessingView: View {
     @State private var sparkle2 = false
     @State private var sparkle3 = false
     
+    @Binding var contentHeight: CGFloat
+    
     var onGotIt: () -> Void = {}
     
     var body: some View {
@@ -18,14 +20,14 @@ struct ProcessingView: View {
             Color("background-dark")
                 .ignoresSafeArea()
             
-            // Background Gradient Overlay (simulating the bg-gradient-to-b from-primary/5)
+            // Background Gradient Overlay
             VStack {
                 LinearGradient(
                     colors: [Color("primary").opacity(0.05), .clear],
                     startPoint: .top,
                     endPoint: .center
                 )
-                .frame(height: UIScreen.main.bounds.height * 0.5)
+                .frame(height: 300)
                 Spacer()
             }
             .ignoresSafeArea()
@@ -43,9 +45,7 @@ struct ProcessingView: View {
                     .fill(Color.white.opacity(0.2))
                     .frame(width: 48, height: 6)
                     .padding(.top, 16)
-                    .padding(.bottom, 8)
-                
-                Spacer()
+                    .padding(.bottom, 24)
                 
                 // Main Illustration Area
                 ZStack {
@@ -156,12 +156,12 @@ struct ProcessingView: View {
                     )
                 }
                 .frame(height: 300)
-                .padding(.bottom, 20)
+                .padding(.bottom, 32)
                 
                 // Text Content
                 VStack(spacing: 12) {
                     Text("We're on it!")
-                        .font(.custom("PlusJakartaSans-Bold", size: 28)) // Fallback to system if custom font not loaded
+                        .font(.custom("PlusJakartaSans-Bold", size: 28)) // Fallback
                         .fontWeight(.bold) // Fallback
                         .foregroundColor(.white)
                         .tracking(-0.5)
@@ -172,10 +172,9 @@ struct ProcessingView: View {
                         .multilineTextAlignment(.center)
                         .lineSpacing(6)
                         .padding(.horizontal, 32)
+                        .fixedSize(horizontal: false, vertical: true) // Ensure wraps correctly
                 }
                 .padding(.bottom, 40)
-                
-                Spacer()
                 
                 // Button
                 Button(action: {
@@ -193,8 +192,19 @@ struct ProcessingView: View {
                         .shadow(color: Color("primary").opacity(0.25), radius: 15, x: 0, y: 0) // shadow-glow
                 }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 48)
+                .padding(.bottom, 24) // Added bottom padding instead of spacer
             }
+            .background(
+                GeometryReader { geo in
+                    Color.clear
+                        .onAppear {
+                            contentHeight = geo.size.height
+                        }
+                        .onChange(of: geo.size.height) { newHeight in
+                            contentHeight = newHeight
+                        }
+                }
+            )
         }
         .onAppear {
             pulseSlow = true
@@ -207,5 +217,5 @@ struct ProcessingView: View {
 }
 
 #Preview {
-    ProcessingView()
+    ProcessingView(contentHeight: .constant(600))
 }
