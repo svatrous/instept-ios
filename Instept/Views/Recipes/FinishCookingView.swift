@@ -3,6 +3,7 @@ import SwiftUI
 struct FinishCookingView: View {
     let recipe: Recipe
     var onDismiss: () -> Void
+    var onHome: () -> Void
     
     @State private var rating: Int = 0
     @State private var animate = false
@@ -15,6 +16,8 @@ struct FinishCookingView: View {
         GeometryReader { geo in
             let w = geo.size.width
             let h = geo.size.height
+            // Use safe area inset if available, otherwise fallback to standard notch height + padding
+            let safeTop = geo.safeAreaInsets.top > 0 ? geo.safeAreaInsets.top : 47
             
             ZStack {
                 // Background Image
@@ -58,7 +61,7 @@ struct FinishCookingView: View {
                                 .clipShape(Circle())
                         }
                     }
-                    .padding(.top, 16)
+                    .padding(.top, safeTop + 10)
                     .padding(.horizontal, 20)
                     
                     Spacer()
@@ -139,7 +142,7 @@ struct FinishCookingView: View {
                     
                     // Buttons
                     VStack(spacing: 12) {
-                        Button(action: onDismiss) {
+                        Button(action: onHome) {
                             Text("Back to Home")
                                 .fontWeight(.bold)
                                 .frame(maxWidth: .infinity)
@@ -264,6 +267,7 @@ struct FinishCookingView: View {
                 Step(description: "Gradually add broth, stirring constantly.", image_url: nil)
             ]
         ),
-        onDismiss: {}
+        onDismiss: {},
+        onHome: {}
     )
 }

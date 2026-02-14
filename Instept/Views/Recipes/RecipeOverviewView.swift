@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RecipeOverviewView: View {
     let recipe: Recipe
+    var onHome: () -> Void = {}
     @Environment(\.dismiss) var dismiss
     @State private var showFullDescription = false
     @State private var translatedRecipe: Recipe?
@@ -311,7 +312,12 @@ struct RecipeOverviewView: View {
             VStack {
                 Spacer()
                 VStack {
-                    NavigationLink(destination: RecipeView(recipe: recipe)) {
+                    NavigationLink(destination: RecipeView(recipe: recipe, onHome: {
+                        // Call the provided onHome action (e.g. for deep links or import flow)
+                        onHome()
+                        // Ensure we always dismiss the current flow to return to Home
+                        dismiss()
+                    })) {
                         HStack {
                             Image(systemName: "play.fill")
                             Text("Start Cooking")

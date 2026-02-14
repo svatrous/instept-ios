@@ -55,7 +55,9 @@ struct HomeView: View {
             .background(
                 NavigationLink(isActive: $isRecipeActive, destination: {
                     if let recipe = navigatedRecipe {
-                        RecipeOverviewView(recipe: recipe)
+                        RecipeOverviewView(recipe: recipe, onHome: {
+                            isRecipeActive = false
+                        })
                     } else {
                         EmptyView()
                     }
@@ -161,7 +163,10 @@ struct HomeView: View {
                         ProgressView().frame(width: 120, height: 160)
                     } else {
                         ForEach(viewModel.myRecipes) { recipe in
-                            NavigationLink(destination: RecipeOverviewView(recipe: recipe)) {
+                            Button(action: {
+                                navigatedRecipe = recipe
+                                isRecipeActive = true
+                            }) {
                                 RecipeCardSmall(recipe: recipe)
                             }
                         }
@@ -182,7 +187,10 @@ struct HomeView: View {
             if viewModel.isLoading {
                 ProgressView().frame(height: 200)
             } else if let recipe = viewModel.popularRecipes.first {
-                NavigationLink(destination: RecipeOverviewView(recipe: recipe)) {
+                Button(action: {
+                    navigatedRecipe = recipe
+                    isRecipeActive = true
+                }) {
                     RecipeCardLarge(recipe: recipe)
                         .padding(.horizontal)
                 }
@@ -202,7 +210,10 @@ struct HomeView: View {
                     ProgressView().padding()
                 } else {
                     ForEach(viewModel.recentRecipes) { recipe in
-                        NavigationLink(destination: RecipeOverviewView(recipe: recipe)) {
+                        Button(action: {
+                            navigatedRecipe = recipe
+                            isRecipeActive = true
+                        }) {
                             RecipeRow(recipe: recipe)
                         }
                     }

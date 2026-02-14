@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecipeView: View {
     let recipe: Recipe
+    var onHome: () -> Void = {}
     @Environment(\.dismiss) var dismiss
     @State private var currentStepIndex: Int? = 0
     
@@ -39,7 +40,7 @@ struct RecipeView: View {
                         // Finish Screen
                         FinishCookingView(recipe: recipe, onDismiss: {
                             dismiss()
-                        })
+                        }, onHome: onHome)
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .id(recipe.steps.count)
                     }
