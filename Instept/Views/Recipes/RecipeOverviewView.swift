@@ -97,34 +97,17 @@ struct RecipeOverviewView: View {
                                 Text(recipe.description)
                                     .font(.body)
                                     .foregroundColor(.gray)
-                                    .lineLimit(3)
+                                    .lineLimit(showFullDescription ? nil : 3)
                                 
                                 Button(action: {
-                                    showFullDescription = true
+                                    withAnimation {
+                                        showFullDescription.toggle()
+                                    }
                                 }) {
-                                    Text("Read more")
+                                    Text(showFullDescription ? "Show less" : "Read more")
                                         .font(.footnote)
                                         .foregroundColor(.orange)
                                         .fontWeight(.bold)
-                                }
-                                .sheet(isPresented: $showFullDescription) {
-                                    VStack(alignment: .leading, spacing: 20) {
-                                        HStack {
-                                            Text("Description")
-                                                .font(.title)
-                                                .fontWeight(.bold)
-                                            Spacer()
-                                            Button("Close") { showFullDescription = false }
-                                        }
-                                        .padding()
-                                        
-                                        ScrollView {
-                                            Text(recipe.description)
-                                                .font(.body)
-                                                .padding(.horizontal)
-                                        }
-                                    }
-                                    .presentationDetents([.medium, .large])
                                 }
                             }
                             
