@@ -71,10 +71,34 @@ struct HomeView: View {
                     }
                 }
             }
-            .task {
-                await viewModel.fetchData()
+        .task {
+            await viewModel.fetchData()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("RecipeReadyNotification"))) { notification in
+            if let recipeId = notification.userInfo?["recipe_id"] as? String {
+                Task {
+                    do {
+                        // 1. Fetch the full recipe
+                        let recipe = try await RecipeService.shared.fetchRecipe(id: recipeId)
+                        
+                        // 2. Auto-save is now handled by backend
+                        // UserManager.shared.saveRecipe(recipeId: recipeId)
+                        
+                        // 3. Refresh user data to update favorites list
+                        // viewModel.fetchData() // Optional: might be too heavy?
+                        
+                        // 4. Navigate
+                        await MainActor.run {
+                            navigatedRecipe = recipe
+                            isRecipeActive = true
+                        }
+                    } catch {
+                        print("Error handling notification recipe: \(error)")
+                    }
+                }
             }
         }
+    }
     }
     
     // MARK: - Components

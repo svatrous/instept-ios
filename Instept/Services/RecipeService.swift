@@ -62,4 +62,18 @@ class RecipeService {
             throw RecipeError.networkError(error)
         }
     }
+    
+    func fetchRecipe(id: String) async throws -> Recipe {
+        guard let url = URL(string: "\(backendUrl)/recipes/\(id)") else {
+            throw RecipeError.invalidURL
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+            throw RecipeError.serverError("Failed to fetch recipe")
+        }
+        
+        return try JSONDecoder().decode(Recipe.self, from: data)
+    }
 }

@@ -45,6 +45,26 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
           UserDefaults.standard.set(token, forKey: "fcmToken")
       }
   }
+
+  // Handle notification when app is in foreground
+  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+      // Show alert even if app is in foreground
+      completionHandler([.banner, .sound])
+  }
+
+  // Handle notification tap
+  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+      let userInfo = response.notification.request.content.userInfo
+      
+      // Check for recipe_id in data payload
+      if let recipeId = userInfo["recipe_id"] as? String {
+          print("Notification tapped for recipe: \(recipeId)")
+          // Post notification to be picked up by HomeView
+          NotificationCenter.default.post(name: NSNotification.Name("RecipeReadyNotification"), object: nil, userInfo: ["recipe_id": recipeId])
+      }
+      
+      completionHandler()
+  }
 }
 
 import FirebaseAuth

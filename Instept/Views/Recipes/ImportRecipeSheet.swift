@@ -195,12 +195,20 @@ struct ImportRecipeSheet: View {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let fcmToken = UserDefaults.standard.string(forKey: "fcmToken")
-        print("Sending import request with FCM Token: \(fcmToken ?? "None")")
+        let userId = Auth.auth().currentUser?.uid
+        print("Sending import request with FCM Token: \(fcmToken ?? "None"), User ID: \(userId ?? "None")")
         
-        var body: [String: String] = ["url": recipeURL]
+        // Use [String: Any] to allow for potnetial future non-string values, though currently all strings
+        var body: [String: Any] = ["url": recipeURL]
         if let token = fcmToken {
             body["fcm_token"] = token
         }
+        if let uid = userId {
+            body["user_id"] = uid
+        }
+        // Should probably add language too if available?
+        // let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+        // body["language"] = languageCode
         
         request.httpBody = try? JSONEncoder().encode(body)
         
