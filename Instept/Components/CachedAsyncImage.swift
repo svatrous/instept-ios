@@ -1,16 +1,67 @@
 import SwiftUI
 
 class ImageCache {
-    static let shared = NSCache<NSString, UIImage>()
+    static let shared = ImageCache()
     
-    private init() {}
+    // Memory cache
+    private let cache = NSCache<NSString, UIImage>()
+    
+    // Disk cache
+    private let fileManager = FileManager.default
+    private let cacheDirectory: URL?
+    
+    private init() {
+        // Create a custom subdirectory for image cache
+        let paths = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
+        cacheDirectory = paths.first?.appendingPathComponent("ImageCache")
+        
+        if let directory = cacheDirectory {
+            try? fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        }
+    }
     
     func get(forKey key: String) -> UIImage? {
-        return ImageCache.shared.object(forKey: key as NSString)
+        // 1. Check memory cache
+        if let image = cache.object(forKey: key as NSString) {
+            return image
+        }
+        
+        // 2. Check disk cache
+        guard let directory = cacheDirectory,
+              let fileName = key.addingPercentEncoding(withAllowedCharacters: .alphanumerics) else {
+            return nil
+        }
+        
+        let fileURL = directory.appendingPathComponent(fileName)
+        
+        guard let data = try? Data(contentsOf: fileURL),
+              let image = UIImage(data: data) else {
+            return nil
+        }
+        
+        // Populate memory cache
+        cache.setObject(image, forKey: key as NSString)
+        
+        return image
     }
     
     func set(_ image: UIImage, forKey key: String) {
-        ImageCache.shared.setObject(image, forKey: key as NSString)
+        // 1. Save to memory cache
+        cache.setObject(image, forKey: key as NSString)
+        
+        // 2. Save to disk cache
+        guard let directory = cacheDirectory,
+              let fileName = key.addingPercentEncoding(withAllowedCharacters: .alphanumerics),
+              let data = image.jpegData(compressionQuality: 0.8) else {
+            return
+        }
+        
+        let fileURL = directory.appendingPathComponent(fileName)
+        
+        // Perform file write on background queue to avoid blocking UI
+        DispatchQueue.global(qos: .background).async {
+            try? data.write(to: fileURL)
+        }
     }
 }
 
@@ -53,7 +104,7 @@ struct CachedAsyncImage<Content: View, Placeholder: View>: View {
         guard let url = url else { return }
         
         // Check cache first
-        if let cachedImage = ImageCache.shared.object(forKey: url.absoluteString as NSString) {
+        if let cachedImage = ImageCache.shared.get(forKey: url.absoluteString) {
             self.image = cachedImage
             return
         }
@@ -67,7 +118,7 @@ struct CachedAsyncImage<Content: View, Placeholder: View>: View {
             guard let data = data, let uiImage = UIImage(data: data) else { return }
             
             // Save to cache
-            ImageCache.shared.setObject(uiImage, forKey: url.absoluteString as NSString)
+            ImageCache.shared.set(uiImage, forKey: url.absoluteString)
             
             DispatchQueue.main.async {
                 withAnimation(transaction.animation) {

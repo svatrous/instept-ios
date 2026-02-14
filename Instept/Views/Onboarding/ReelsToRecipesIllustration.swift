@@ -13,7 +13,7 @@ struct ReelsToRecipesIllustration: View {
             VStack(spacing: 0) {
                 // Video section (top half)
                 ZStack {
-                    AsyncImage(url: URL(string: videoImageUrl)) { image in
+                    CachedAsyncImage(url: URL(string: videoImageUrl)) { image in
                         image.resizable().aspectRatio(contentMode: .fill)
                     } placeholder: {
                         LinearGradient(
@@ -101,7 +101,7 @@ struct ReelsToRecipesIllustration: View {
                     .padding(.top, 6)
                     
                     HStack(spacing: 6) {
-                        AsyncImage(url: URL(string: videoImageUrl)) { image in
+                        CachedAsyncImage(url: URL(string: videoImageUrl)) { image in
                             image.resizable().aspectRatio(contentMode: .fill)
                         } placeholder: {
                             RoundedRectangle(cornerRadius: 6).fill(Color.orange.opacity(0.2))

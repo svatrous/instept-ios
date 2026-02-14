@@ -5,7 +5,7 @@ struct RecipeRow: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: recipe.hero_image_url ?? recipe.steps.first?.image_url ?? "")) { image in
+            CachedAsyncImage(url: URL(string: recipe.hero_image_url ?? recipe.steps.first?.image_url ?? "")) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)

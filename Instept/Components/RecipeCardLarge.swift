@@ -5,7 +5,7 @@ struct RecipeCardLarge: View {
     
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            AsyncImage(url: URL(string: recipe.hero_image_url ?? recipe.steps.first?.image_url ?? "")) { image in
+            CachedAsyncImage(url: URL(string: recipe.hero_image_url ?? recipe.steps.first?.image_url ?? "")) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)

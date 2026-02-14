@@ -39,7 +39,7 @@ struct VideoStruggleIllustration: View {
                 .opacity(0.6)
             
             // Card 3 (Back)
-            AsyncImage(url: URL(string: backCardUrl)) { image in
+            CachedAsyncImage(url: URL(string: backCardUrl)) { image in
                 image.resizable().aspectRatio(contentMode: .fill)
             } placeholder: {
                 Color(red: 0.2, green: 0.2, blue: 0.2)
@@ -59,7 +59,7 @@ struct VideoStruggleIllustration: View {
             
             // Card 2 (Middle)
             ZStack {
-                AsyncImage(url: URL(string: midCardUrl)) { image in
+                CachedAsyncImage(url: URL(string: midCardUrl)) { image in
                     image.resizable().aspectRatio(contentMode: .fill)
                 } placeholder: {
                     Color(red: 0.25, green: 0.25, blue: 0.25)
@@ -96,7 +96,7 @@ struct VideoStruggleIllustration: View {
             
             // Card 1 (Front - Main Focus)
             ZStack {
-                AsyncImage(url: URL(string: mainImageUrl)) { image in
+                CachedAsyncImage(url: URL(string: mainImageUrl)) { image in
                     image.resizable().aspectRatio(contentMode: .fill)
                 } placeholder: {
                     Color(red: 0.17, green: 0.13, blue: 0.10)
@@ -138,7 +138,7 @@ struct VideoStruggleIllustration: View {
                     
                     // Avatar + Name
                     HStack(spacing: 8) {
-                        AsyncImage(url: URL(string: avatarUrl)) { image in
+                        CachedAsyncImage(url: URL(string: avatarUrl)) { image in
                             image.resizable().aspectRatio(contentMode: .fill)
                         } placeholder: {
                             Circle().fill(Color.gray.opacity(0.4))

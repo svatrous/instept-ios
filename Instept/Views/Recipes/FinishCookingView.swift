@@ -21,7 +21,7 @@ struct FinishCookingView: View {
             
             ZStack {
                 // Background Image
-                AsyncImage(url: URL(string: recipe.hero_image_url ?? recipe.steps.last?.image_url ?? "")) { image in
+                CachedAsyncImage(url: URL(string: recipe.hero_image_url ?? recipe.steps.last?.image_url ?? "")) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
