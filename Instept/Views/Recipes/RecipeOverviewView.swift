@@ -4,6 +4,12 @@ struct RecipeOverviewView: View {
     let recipe: Recipe
     @Environment(\.dismiss) var dismiss
     @State private var showFullDescription = false
+    @State private var translatedRecipe: Recipe?
+    @State private var isTranslating = false
+    
+    private var displayRecipe: Recipe {
+        translatedRecipe ?? recipe
+    }
     
     // Change this to your backend URL
     private let backendUrl = "https://web-production-11711.up.railway.app"
@@ -20,6 +26,7 @@ struct RecipeOverviewView: View {
     @StateObject private var userManager = UserManager.shared
 
     var body: some View {
+        let recipe = displayRecipe
         ZStack(alignment: .bottom) {
             
             // Main Content Layer
@@ -210,29 +217,57 @@ struct RecipeOverviewView: View {
                     // Right Side Buttons: Instagram, Like, Share
                     HStack(spacing: 12) {
                         // Translate Button (PRO)
-                        Button(action: {
-                            // Translation logic here
-                        }) {
-                            ZStack(alignment: .topTrailing) {
-                                Image(systemName: "translate")
-                                    .font(.system(size: 18, weight: .bold))
-                                    .foregroundColor(.white)
-                                    .padding(10)
-                                    .background(Color.black.opacity(0.5))
-                                    .clipShape(Circle())
-                                
-                                Text("PRO")
-                                    .font(.system(size: 8, weight: .bold))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 4)
-                                    .padding(.vertical, 2)
-                                    .background(Color.orange)
-                                    .cornerRadius(4)
-                                    .offset(x: 4, y: -4)
+                        if recipe.language != (Locale.current.language.languageCode?.identifier ?? "en") {
+                            Button(action: {
+                                Task {
+                                    isTranslating = true
+                                    do {
+                                        let targetLang = Locale.current.language.languageCode?.identifier ?? "en"
+                                        if let sourceUrl = recipe.source_url {
+                                            let translated = try await RecipeService.shared.translateRecipe(sourceUrl: sourceUrl, targetLanguage: targetLang)
+                                            withAnimation {
+                                                translatedRecipe = translated
+                                            }
+                                        }
+                                    } catch {
+                                        print("Translation failed: \(error)")
+                                    }
+                                    isTranslating = false
+                                }
+                            }) {
+                                ZStack(alignment: .topTrailing) {
+                                    if isTranslating {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                            .padding(10)
+                                            .background(Color.black.opacity(0.5))
+                                            .clipShape(Circle())
+                                    } else {
+                                        Image(systemName: "translate")
+                                            .font(.system(size: 18, weight: .bold))
+                                            .foregroundColor(.white)
+                                            .padding(10)
+                                            .background(Color.black.opacity(0.5))
+                                            .clipShape(Circle())
+                                        
+                                        Text("AI")
+                                            .font(.system(size: 8, weight: .bold))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 4)
+                                            .padding(.vertical, 2)
+                                            .background(Color.orange)
+                                            .cornerRadius(4)
+                                            .offset(x: 4, y: -4)
+                                    }
+                                }
                             }
                         }
                         
-                        Button(action: { /* Open Instagram */ }) {
+                        Button(action: {
+                            if let urlStr = recipe.source_url, let url = URL(string: urlStr) {
+                                UIApplication.shared.open(url)
+                            }
+                        }) {
                             Image(systemName: "camera") // Using camera as proxy for Instagram icon
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundColor(.white)
