@@ -42,26 +42,30 @@ struct User: Identifiable, Codable {
 struct Step: Codable, Hashable {
     let description: String
     let image_url: String?
+    let ingredients: [Ingredient]?
     
     enum CodingKeys: String, CodingKey {
-        case description, image_url
+        case description, image_url, ingredients
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         description = try container.decodeIfPresent(String.self, forKey: .description) ?? ""
         image_url = try container.decodeIfPresent(String.self, forKey: .image_url)
+        ingredients = try container.decodeIfPresent([Ingredient].self, forKey: .ingredients)
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(description, forKey: .description)
         try container.encodeIfPresent(image_url, forKey: .image_url)
+        try container.encodeIfPresent(ingredients, forKey: .ingredients)
     }
     
-    init(description: String, image_url: String? = nil) {
+    init(description: String, image_url: String? = nil, ingredients: [Ingredient]? = nil) {
         self.description = description
         self.image_url = image_url
+        self.ingredients = ingredients
     }
 }
 

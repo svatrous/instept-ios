@@ -163,7 +163,30 @@ struct StepFullScreenView: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(Color.orange)
+                    .background(Color.orange)
                     .cornerRadius(8)
+                
+                // Ingredients Tags
+                if let ingredients = step.ingredients, !ingredients.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(ingredients) { ingredient in
+                                Text("\(ingredient.amount) \(ingredient.unit) \(ingredient.name)")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Color.black.opacity(0.5))
+                                    .clipShape(Capsule())
+                                    .overlay(
+                                        Capsule()
+                                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                                    )
+                            }
+                        }
+                    }
+                }
                 
                 // Description
                 Text(step.description)
@@ -227,9 +250,16 @@ struct StepFullScreenView: View {
                 Ingredient(name: "Mushrooms", amount: "200", unit: "g")
             ],
             steps: [
-                Step(description: "Heat olive oil in a large pan over medium heat. Add diced onions and sauté until translucent.", image_url: "https://images.unsplash.com/photo-1556909114-44e3e70034e2?w=800"),
-                Step(description: "Add sliced mushrooms and cook for 5 minutes until golden brown.", image_url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800"),
-                Step(description: "Add arborio rice and toast for 2 minutes, stirring constantly.", image_url: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800")
+                Step(description: "Heat olive oil in a large pan over medium heat. Add diced onions and sauté until translucent.", image_url: "https://images.unsplash.com/photo-1556909114-44e3e70034e2?w=800", ingredients: [
+                    Ingredient(name: "Olive Oil", amount: "2", unit: "tbsp"),
+                    Ingredient(name: "Onion", amount: "1", unit: "medium")
+                ]),
+                Step(description: "Add sliced mushrooms and cook for 5 minutes until golden brown.", image_url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800", ingredients: [
+                    Ingredient(name: "Mushrooms", amount: "200", unit: "g")
+                ]),
+                Step(description: "Add arborio rice and toast for 2 minutes, stirring constantly.", image_url: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800", ingredients: [
+                    Ingredient(name: "Arborio Rice", amount: "300", unit: "g")
+                ])
             ]
         )
     )
