@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct ImportRecipeSheet: View {
     @Environment(\.dismiss) var dismiss
@@ -199,7 +200,7 @@ struct ImportRecipeSheet: View {
         print("Sending import request with FCM Token: \(fcmToken ?? "None"), User ID: \(userId ?? "None")")
         
         // Use [String: Any] to allow for potnetial future non-string values, though currently all strings
-        var body: [String: Any] = ["url": recipeURL]
+        var body: [String: String] = ["url": recipeURL]
         if let token = fcmToken {
             body["fcm_token"] = token
         }

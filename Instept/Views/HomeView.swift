@@ -89,6 +89,18 @@ struct HomeView: View {
                         
                         // 4. Navigate
                         await MainActor.run {
+                            // Dismiss any open sheets
+                            showingAddRecipe = false
+                            // If we are already in a recipe, pop back first
+                            if isRecipeActive {
+                                isRecipeActive = false
+                            }
+                        }
+                        
+                        // Allow time for dismissal/pop animation
+                        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5s
+                        
+                        await MainActor.run {
                             navigatedRecipe = recipe
                             isRecipeActive = true
                         }
