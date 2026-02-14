@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Clean Cooking Step View</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f45925",
+                        "background-light": "#f8f6f5",
+                        "background-dark": "#221410",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-white font-display overflow-hidden h-screen w-screen relative">
+    <div class="absolute inset-0 z-0 h-full w-full">
+        <img alt="Close up of hands chopping mushrooms on a wooden board"
+            class="h-full w-full object-cover filter brightness-[0.85]"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAr7cfJZpYjfUM1pqUM4l5d0fb9WDN4YHBIGJYJffc_4iUmma73EwXXvgM4C95jzj3bAfyLpHyEtICL8mgSwvKzCkHjvLd4yOSJ--rJwysPF0c4pAFuiV6uxf7u8xBbHDPQlBawoTzREaVOaZuG9cCaU-ljU2NvFTJPurYoSXYN4Kd4MQaljREdUHpDMtu85fI_Sg5Yvh79GapcsbYyPk8HAI6oNiDuT_hRr4-bSxovVz6NUTrYfhwmHFslKp6LjxKb1klc4baIyA" />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/90 pointer-events-none">
+        </div>
+    </div>
+    <div class="absolute inset-0 z-10 flex flex-col justify-between p-6 pb-12 safe-area-inset-bottom">
+        <div class="flex flex-col gap-4 pt-2">
+            <div class="flex gap-1.5 w-full">
+                <div class="h-1 flex-1 bg-primary rounded-full shadow-[0_0_10px_rgba(244,89,37,0.5)]"></div>
+                <div class="h-1 flex-1 bg-white/20 rounded-full backdrop-blur-sm"></div>
+                <div class="h-1 flex-1 bg-white/20 rounded-full backdrop-blur-sm"></div>
+                <div class="h-1 flex-1 bg-white/20 rounded-full backdrop-blur-sm"></div>
+                <div class="h-1 flex-1 bg-white/20 rounded-full backdrop-blur-sm"></div>
+                <div class="h-1 flex-1 bg-white/20 rounded-full backdrop-blur-sm"></div>
+                <div class="h-1 flex-1 bg-white/20 rounded-full backdrop-blur-sm"></div>
+                <div class="h-1 flex-1 bg-white/20 rounded-full backdrop-blur-sm"></div>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+                <div
+                    class="flex items-center gap-2 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+                    <span class="material-icons text-sm text-primary">restaurant_menu</span>
+                    <span class="text-xs font-semibold tracking-wide text-white/90">Creamy Mushroom Risotto</span>
+                </div>
+                <button
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 transition-colors">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+        </div>
+        <div class="flex-1"></div>
+        <div class="flex flex-col gap-5 relative z-20 pb-4">
+            <div class="flex items-center gap-3">
+                <span class="bg-primary px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider text-white">Step
+                    1</span>
+                <span class="text-white/60 text-sm font-medium">of 8</span>
+            </div>
+            <div class="space-y-4">
+                <div class="flex flex-wrap gap-2">
+                    <div
+                        class="inline-flex items-center px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15">
+                        <span class="text-[10px] font-bold text-white/90 tracking-wide">MUSHROOMS — 200G</span>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h1 class="text-3xl font-extrabold leading-tight text-white drop-shadow-lg">
+                        Chop the <span class="text-primary">mushrooms</span> into thin slices.
+                    </h1>
+                    <p class="text-white/80 text-lg font-medium leading-snug drop-shadow-md">
+                        Ensure the stems are trimmed. Keep slices consistent for even cooking.
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center justify-center mt-8 opacity-60">
+                <span class="text-xs font-medium uppercase tracking-widest text-white/60 mb-1">Swipe for next</span>
+                <span class="material-icons text-white/60">keyboard_arrow_up</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

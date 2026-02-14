@@ -32,6 +32,13 @@ struct Ingredient: Codable, Identifiable {
     }
 }
 
+struct User: Identifiable, Codable {
+    var id: String
+    let name: String
+    let email: String
+    let avatarUrl: String?
+}
+
 struct Step: Codable, Hashable {
     let description: String
     let image_url: String?

@@ -5,6 +5,7 @@ struct HomeView: View {
     @State private var showingAddRecipe = false
     @State private var navigatedRecipe: Recipe?
     @State private var isRecipeActive = false
+    @State private var showingSettings = false
     
     var body: some View {
         NavigationView {
@@ -130,23 +131,30 @@ struct HomeView: View {
             Spacer()
             
             // Avatar
-            Circle()
-                .fill(Color.gray.opacity(0.3))
-                .frame(width: 48, height: 48)
-                .overlay(
-                    Image(systemName: "person.fill")
-                        .foregroundColor(.white)
-                )
-                .overlay(
-                    Circle()
-                        .stroke(Color("background-dark"), lineWidth: 2)
-                        .frame(width: 12, height: 12)
-                        .background(Circle().fill(Color("primary")))
-                        .offset(x: 16, y: -16)
-                )
+            Button {
+                showingSettings = true
+            } label: {
+                Circle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(width: 48, height: 48)
+                    .overlay(
+                        Image(systemName: "person.fill")
+                            .foregroundColor(.white)
+                    )
+                    .overlay(
+                        Circle()
+                            .stroke(Color("background-dark"), lineWidth: 2)
+                            .frame(width: 12, height: 12)
+                            .background(Circle().fill(Color("primary")))
+                            .offset(x: 16, y: -16)
+                    )
+            }
         }
         .padding(.horizontal)
         .padding(.top, 20)
+        .fullScreenCover(isPresented: $showingSettings) {
+            SettingsView()
+        }
     }
     
     var myRecipesSection: some View {
