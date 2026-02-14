@@ -76,9 +76,10 @@ struct Recipe: Codable, Identifiable {
     var likes_count: Int?
     let ingredients: [Ingredient]
     let steps: [Step]
+    var language: String?
     
     enum CodingKeys: String, CodingKey {
-        case id, source_url, title, description, category, rating, reviews_count, time, difficulty, calories, author_name, author_avatar, hero_image_url, created_at, likes_count, ingredients, steps
+        case id, source_url, title, description, category, rating, reviews_count, time, difficulty, calories, author_name, author_avatar, hero_image_url, created_at, likes_count, ingredients, steps, language
     }
     
     init(from decoder: Decoder) throws {
@@ -146,6 +147,7 @@ struct Recipe: Codable, Identifiable {
         
         ingredients = try container.decodeIfPresent([Ingredient].self, forKey: .ingredients) ?? []
         steps = try container.decodeIfPresent([Step].self, forKey: .steps) ?? []
+        language = try container.decodeIfPresent(String.self, forKey: .language)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -167,10 +169,11 @@ struct Recipe: Codable, Identifiable {
         try container.encodeIfPresent(likes_count, forKey: .likes_count)
         try container.encode(ingredients, forKey: .ingredients)
         try container.encode(steps, forKey: .steps)
+        try container.encodeIfPresent(language, forKey: .language)
     }
     
     // Memberwise Init
-    init(id: String? = nil, source_url: String? = nil, title: String, description: String, category: String, rating: Double, reviews_count: Int, time: String, difficulty: String, calories: String, author_name: String, author_avatar: String, hero_image_url: String? = nil, created_at: Date? = nil, likes_count: Int? = nil, ingredients: [Ingredient], steps: [Step]) {
+    init(id: String? = nil, source_url: String? = nil, title: String, description: String, category: String, rating: Double, reviews_count: Int, time: String, difficulty: String, calories: String, author_name: String, author_avatar: String, hero_image_url: String? = nil, created_at: Date? = nil, likes_count: Int? = nil, ingredients: [Ingredient], steps: [Step], language: String? = "en") {
         self.id = id
         self.source_url = source_url
         self.title = title
@@ -188,6 +191,7 @@ struct Recipe: Codable, Identifiable {
         self.likes_count = likes_count
         self.ingredients = ingredients
         self.steps = steps
+        self.language = language
     }
 }
 
@@ -280,7 +284,8 @@ struct RecipeDocument: Codable {
             created_at: created_at,
             likes_count: likes_count,
             ingredients: translation.ingredients,
-            steps: translation.steps
+            steps: translation.steps,
+            language: language
         )
     }
 }
