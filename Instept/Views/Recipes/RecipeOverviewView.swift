@@ -217,14 +217,16 @@ struct RecipeOverviewView: View {
                     // Right Side Buttons: Instagram, Like, Share
                     HStack(spacing: 12) {
                         // Translate Button (PRO)
-                        if recipe.language != (Locale.current.language.languageCode?.identifier ?? "en") {
+                        // Use preferredLanguages to get system language, ignoring app localization status
+                        let systemLang = Locale.preferredLanguages.first?.components(separatedBy: "-").first ?? "en"
+                        
+                        if recipe.language != systemLang {
                             Button(action: {
                                 Task {
                                     isTranslating = true
                                     do {
-                                        let targetLang = Locale.current.language.languageCode?.identifier ?? "en"
                                         if let sourceUrl = recipe.source_url {
-                                            let translated = try await RecipeService.shared.translateRecipe(sourceUrl: sourceUrl, targetLanguage: targetLang)
+                                            let translated = try await RecipeService.shared.translateRecipe(sourceUrl: sourceUrl, targetLanguage: systemLang)
                                             withAnimation {
                                                 translatedRecipe = translated
                                             }
@@ -262,6 +264,8 @@ struct RecipeOverviewView: View {
                                 }
                             }
                         }
+                        
+                        // DEBUG OVERLAY REMOVED
                         
                         Button(action: {
                             if let urlStr = recipe.source_url, let url = URL(string: urlStr) {

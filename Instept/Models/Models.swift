@@ -261,8 +261,21 @@ struct RecipeDocument: Codable {
     
     // Helper to convert to flat Recipe
     func toRecipe(id: String, language: String = "en") -> Recipe? {
-        guard let translations = translations,
-              let translation = translations[language] ?? translations["en"] ?? translations.values.first else {
+        guard let translations = translations else { return nil }
+        
+        let selectedLanguage: String
+        let translation: RecipeTranslation
+        
+        if let t = translations[language] {
+            selectedLanguage = language
+            translation = t
+        } else if let t = translations["en"] {
+            selectedLanguage = "en"
+            translation = t
+        } else if let first = translations.first {
+            selectedLanguage = first.key
+            translation = first.value
+        } else {
             return nil
         }
         
@@ -285,7 +298,7 @@ struct RecipeDocument: Codable {
             likes_count: likes_count,
             ingredients: translation.ingredients,
             steps: translation.steps,
-            language: language
+            language: selectedLanguage
         )
     }
 }
